@@ -1,6 +1,7 @@
 package main;
 
 import camera.Camera;
+import model.Light;
 import model.Model;
 import org.joml.Math;
 import org.joml.Matrix4f;
@@ -8,7 +9,6 @@ import org.joml.Vector3f;
 import org.lwjgl.Version;
 import org.lwjgl.opengl.GL;
 import shaders.ShaderProgram;
-import textures.Texture;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -143,7 +143,10 @@ public class Main {
         Camera camera = new Camera();
         display.setCamera(camera);
 
-        Model cube = new Model(cubeWithNormals, 6);
+        Light light = new Light(new Vector3f(2.0f, 3.0f, 0.0f), Light.WHITE, new Model(cubeWithNormals, 6, Light.BLACK));
+        Model cube = new Model(cubeWithNormals, 6, new Vector3f(1.0f,0.5f, 0.31f));
+        Model ground = new Model(cubeWithNormals, 6, new Vector3f(0.0f, 1.0f, 0.0f));
+
         ShaderProgram program = new ShaderProgram(
                 "src/shaders/cube.vs",
                 "src/shaders/cube.fs");
@@ -155,21 +158,17 @@ public class Main {
         //Texture wall = Texture.loadTexture("res/wall.png");
         //Texture awesomeface = Texture.loadTexture("res/awesomeface.png");
 
-        Vector3f lightPos = new Vector3f(2.0f, 3.0f,0.0f);
-
         program.use();
-        program.setUniform3f("objectColor", 1.0f, 0.5f, 0.31f);
-        program.setUniform3f("lightColor", 1.0f, 1.0f, 1.0f);
-        program.setUniform3f("lightPos", lightPos.x, lightPos.y, lightPos.z);
+        program.setUniform3f("lightColor", light.getColour());
+        program.setUniform3f("lightPos", light.getPosition());
 
         lightSourceProgram.use();
-        lightSourceProgram.setUniform3f("lightColor", 1.0f, 1.0f, 1.0f);
-
+        lightSourceProgram.setUniform3f("lightColor", light.getColour());
 
         float deltaTime = 0.0f;
         float lastFrame = 0.0f;
 
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
         while(!display.shouldClose()) {
 
             float currentTime =  display.getTime();
@@ -193,14 +192,14 @@ public class Main {
             cube.bindVAO();
 
             model.identity();
-            model.translate(lightPos);
+            model.translate(light.getPosition());
             mvp.identity();
             projection.mul(view, mvp).mul(model, mvp);
 
             lightSourceProgram.use();
             lightSourceProgram.setMatrix4f("mvp", mvp);
 
-            glDrawArrays(GL_TRIANGLES, 0, cube.getVertexCount());
+            glDrawArrays(GL_TRIANGLES, 0, light.getModel().getVertexCount());
 
             cube.unbindVAO();
 
@@ -208,17 +207,36 @@ public class Main {
             cube.bindVAO();
 
             model.identity();
-            model.translate(new Vector3f(-2.0f, 0.0f,0.0f)).rotateY(Math.toRadians(currentTime) * 10);
+            model.translate(new Vector3f(-2.0f, 1.0f,0.0f)).rotateY(Math.toRadians(currentTime) * 10);
             mvp.identity();
             projection.mul(view, mvp).mul(model, mvp);
 
             program.use();
+            program.setUniform3f("objectColor", cube.getColour());
             program.setMatrix4f("model", model);
             program.setMatrix4f("view", view);
             program.setMatrix4f("projection", projection);
             program.setUniform3f("viewPos", c.getPosition());
 
             glDrawArrays(GL_TRIANGLES, 0, cube.getVertexCount());
+
+            cube.unbindVAO();
+
+            cube.bindVAO();
+
+            model.identity();
+            model.translate(new Vector3f(0.0f, 0.0f,0.0f)).scale(100.0f, 0.1f, 100.0f);
+            mvp.identity();
+            projection.mul(view, mvp).mul(model, mvp);
+
+            program.use();
+            program.setUniform3f("objectColor", ground.getColour());
+            program.setMatrix4f("model", model);
+            program.setMatrix4f("view", view);
+            program.setMatrix4f("projection", projection);
+            program.setUniform3f("viewPos", c.getPosition());
+
+            glDrawArrays(GL_TRIANGLES, 0, ground.getVertexCount());
 
             cube.unbindVAO();
 

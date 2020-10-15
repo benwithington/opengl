@@ -1,5 +1,6 @@
 package model;
 
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
@@ -13,8 +14,12 @@ public class Model {
     private final int vertexCount;
     private final int FLOAT_SIZE = Float.SIZE/8;
 
-    public Model(float[] positions, int[] indices) {
+    private Vector3f colour;
+
+    public Model(float[] positions, int[] indices, Vector3f colour) {
         vertexCount = indices.length;
+        this.colour = colour;
+
         vao = glGenVertexArrays();
         bindVAO();
 
@@ -35,8 +40,9 @@ public class Model {
         unbindVAO();
     }
 
-    public Model(float[] positions, int floatsPerVertex) {
+    public Model(float[] positions, int floatsPerVertex, Vector3f colour) {
         vertexCount = positions.length/floatsPerVertex;
+        this.colour = colour;
 
         vao = glGenVertexArrays();
         bindVAO();
@@ -52,6 +58,14 @@ public class Model {
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         unbindVAO();
+    }
+
+    public Vector3f getColour() {
+        return colour;
+    }
+
+    public void setColour(Vector3f colour) {
+        this.colour = colour;
     }
 
     public void bindVAO() {

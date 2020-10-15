@@ -68,7 +68,7 @@ public class Camera {
     }
 
     public void resetToDefault() {
-        this.position    = new Vector3f(0.0f, 0.0f,  10.0f);
+        this.position    = new Vector3f(0.0f, 2.0f,  10.0f);
         this.up          = new Vector3f(0.0f, 1.0f,  0.0f);
         this.front       = new Vector3f(0.0f, 0.0f, -1.0f);
         this.right       = new Vector3f();
