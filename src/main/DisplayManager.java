@@ -91,22 +91,25 @@ public class DisplayManager {
     public void processInput() {
         if(camera != null) {
             if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-                camera.processKeyboard(Camera.Movement.FORWARD, deltaTime);
+                camera.processKeyboard(Camera.Action.FORWARD, deltaTime);
 
             if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-                camera.processKeyboard(Camera.Movement.BACKWARD, deltaTime);
+                camera.processKeyboard(Camera.Action.BACKWARD, deltaTime);
 
             if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-                camera.processKeyboard(Camera.Movement.LEFT, deltaTime);
+                camera.processKeyboard(Camera.Action.LEFT, deltaTime);
 
             if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-                camera.processKeyboard(Camera.Movement.RIGHT, deltaTime);
+                camera.processKeyboard(Camera.Action.RIGHT, deltaTime);
 
             if(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-                camera.processKeyboard(Camera.Movement.UP, deltaTime);
+                camera.processKeyboard(Camera.Action.UP, deltaTime);
 
             if(glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS)
-                camera.processKeyboard(Camera.Movement.DOWN, deltaTime);
+                camera.processKeyboard(Camera.Action.DOWN, deltaTime);
+
+            if(glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+                camera.processKeyboard(Camera.Action.RESET, 0);
         }
     }
 

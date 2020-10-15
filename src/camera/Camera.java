@@ -3,17 +3,16 @@ package camera;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-import java.util.Vector;
-
 public class Camera {
 
-    public enum Movement {
+    public enum Action {
         FORWARD,
         BACKWARD,
         LEFT,
         RIGHT,
         UP,
-        DOWN
+        DOWN,
+        RESET
     }
 
     //Default Values
@@ -36,6 +35,39 @@ public class Camera {
     private float zoom;
 
     public Camera() {
+        this.resetToDefault();
+    }
+
+    public Matrix4f getViewMatrix() {
+        return new Matrix4f().lookAt(this.position, this.position.add(this.front, new Vector3f()), this.up);
+    }
+
+    public void processKeyboard(Action action, float deltaTime) {
+        float velocity = this.movementSpeed * deltaTime;
+        if(action == Action.FORWARD) {
+            this.position.add(this.front.mul(velocity, new Vector3f()));
+        }
+        if(action == Action.BACKWARD) {
+            this.position.sub(this.front.mul(velocity, new Vector3f()));
+        }
+        if(action == Action.LEFT) {
+            this.position.sub(this.right.mul(velocity, new Vector3f()));
+        }
+        if(action == Action.RIGHT) {
+            this.position.add(this.right.mul(velocity, new Vector3f()));
+        }
+        if(action == Action.UP) {
+            this.position.add(this.up.mul(velocity, new Vector3f()));
+        }
+        if(action == Action.DOWN) {
+            this.position.sub(this.up.mul(velocity, new Vector3f()));
+        }
+        if(action == Action.RESET) {
+            this.resetToDefault();
+        }
+    }
+
+    public void resetToDefault() {
         this.position    = new Vector3f(0.0f, 0.0f,  10.0f);
         this.up          = new Vector3f(0.0f, 1.0f,  0.0f);
         this.front       = new Vector3f(0.0f, 0.0f, -1.0f);
@@ -50,32 +82,6 @@ public class Camera {
         this.worldUp = this.up;
 
         updateCameraVectors();
-    }
-
-    public Matrix4f getViewMatrix() {
-        return new Matrix4f().lookAt(this.position, this.position.add(this.front, new Vector3f()), this.up);
-    }
-
-    public void processKeyboard(Movement direction, float deltaTime) {
-        float velocity = this.movementSpeed * deltaTime;
-        if(direction == Movement.FORWARD) {
-            this.position.add(this.front.mul(velocity, new Vector3f()));
-        }
-        if(direction == Movement.BACKWARD) {
-            this.position.sub(this.front.mul(velocity, new Vector3f()));
-        }
-        if(direction == Movement.LEFT) {
-            this.position.sub(this.right.mul(velocity, new Vector3f()));
-        }
-        if(direction == Movement.RIGHT) {
-            this.position.add(this.right.mul(velocity, new Vector3f()));
-        }
-        if(direction == Movement.UP) {
-            this.position.add(this.up.mul(velocity, new Vector3f()));
-        }
-        if(direction == Movement.DOWN) {
-            this.position.sub(this.up.mul(velocity, new Vector3f()));
-        }
     }
 
     public void processMouseMovement(float xOffset, float yOffset, boolean constainPitch) {
