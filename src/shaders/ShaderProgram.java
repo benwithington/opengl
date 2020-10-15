@@ -87,6 +87,10 @@ public class ShaderProgram {
         glUniform3f(uniformLocation(name), a, b, c);
     }
 
+    public void setUniform3f(String name, Vector3f vec) {
+        glUniform3f(uniformLocation(name), vec.x, vec.y, vec.z);
+    }
+
     public void setInt(String name, int value) {
         glUniform1i(uniformLocation(name), value);
     }

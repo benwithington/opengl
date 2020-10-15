@@ -21,7 +21,7 @@ public class Main {
             1, 2, 3    // second triangle
     };
 
-    float cubeVerts[] = {
+    float colouredCubeVerts[] = {
             -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
              0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
              0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
@@ -65,6 +65,50 @@ public class Main {
             -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
 
+    float cubeWithNormals[] = {
+            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+            0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+            0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+            0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+
+            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+            0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+            0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+            0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+
+            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+            -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+            -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+            -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+            -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+            0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+            0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+            0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+            0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+            0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+            0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+            0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+            0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+            0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+
+            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+            0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+            0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+            0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+    };
+
     Vector3f cubePositions[] = {
       new Vector3f( 0.0f,  0.0f,  0.0f),
       new Vector3f( 2.0f,  5.0f, -15.0f),
@@ -99,22 +143,33 @@ public class Main {
         Camera camera = new Camera();
         display.setCamera(camera);
 
-        Model cube = new Model(cubeVerts, indices);
+        Model cube = new Model(cubeWithNormals, indices);
         ShaderProgram program = new ShaderProgram(
-                "src/shaders/vertexShader.txt",
-                "src/shaders/fragmentShader.txt");
+                "src/shaders/cube.vs",
+                "src/shaders/cube.fs");
 
-        Texture wall = Texture.loadTexture("res/wall.png");
-        Texture awesomeface = Texture.loadTexture("res/awesomeface.png");
+        ShaderProgram lightSourceProgram = new ShaderProgram(
+                "src/shaders/lightSource.vs",
+                "src/shaders/lightSource.fs");
+
+        //Texture wall = Texture.loadTexture("res/wall.png");
+        //Texture awesomeface = Texture.loadTexture("res/awesomeface.png");
+
+        Vector3f lightPos = new Vector3f(2.0f, 3.0f,0.0f);
 
         program.use();
-        program.setInt("texture1", 0);
-        program.setInt("texture2", 1);
+        program.setUniform3f("objectColor", 1.0f, 0.5f, 0.31f);
+        program.setUniform3f("lightColor", 1.0f, 1.0f, 1.0f);
+        program.setUniform3f("lightPos", lightPos.x, lightPos.y, lightPos.z);
+
+        lightSourceProgram.use();
+        lightSourceProgram.setUniform3f("lightColor", 1.0f, 1.0f, 1.0f);
+
 
         float deltaTime = 0.0f;
         float lastFrame = 0.0f;
 
-        glClearColor(0.2f, 0.6f, 0.4f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         while(!display.shouldClose()) {
 
             float currentTime =  display.getTime();
@@ -122,57 +177,53 @@ public class Main {
             lastFrame = currentTime;
             display.setDeltaTime(deltaTime);
 
-
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             Camera c = display.getCamera();
             display.processInput();
 
-            Texture.setActiveTexture(0);
-            wall.bind();
-            Texture.setActiveTexture(1);
-            awesomeface.bind();
-
+            Matrix4f model = new Matrix4f();
             Matrix4f view = c.getViewMatrix();
-
             Matrix4f projection = new Matrix4f();
             projection.perspective(Math.toRadians(c.getZoom()),
                     (float)(display.getWidth() / display.getHeight()), 0.1f, 100.0f);
+            Matrix4f mvp = new Matrix4f();
 
-            program.setMatrix4f("view", view);
-            program.setMatrix4f("projection", projection);
-
+            //Light Source//////////////////////////////////////
             cube.bindVAO();
 
-            for(int i = 0; i < cubePositions.length; i++) {
-                Matrix4f model = new Matrix4f();
-                float angle = Math.toRadians(20.0f * i);
+            model.identity();
+            model.translate(lightPos);
+            mvp.identity();
+            projection.mul(view, mvp).mul(model, mvp);
 
-                if(i % 3 == 0)
-                    angle = Math.toRadians(currentTime * 25.0f);
+            lightSourceProgram.use();
+            lightSourceProgram.setMatrix4f("mvp", mvp);
 
+            glDrawArrays(GL_TRIANGLES, 0, cube.getVertexCount());
 
-                model.translate(cubePositions[i])
-                        .rotateX(angle * 1.0f)
-                        .rotateY(angle * 0.3f)
-                        .rotateZ(angle * 0.5f);
-
-                Matrix4f mvp = new Matrix4f().identity();
-                projection.mul(view, mvp).mul(model, mvp);
-
-                program.setMatrix4f("model", model);
-                program.setMatrix4f("mvp", mvp);
-
-                glDrawArrays(GL_TRIANGLES, 0, cube.getVertexCount());
-            }
-
-            display.setCamera(c);
-            //glDrawArrays(GL_TRIANGLES, 0, cube.getVertexCount());
             cube.unbindVAO();
 
-            Texture.unbind();
+            //Objects Affected by Light Source [[CUBE]]
+            cube.bindVAO();
+
+            model.identity();
+            model.translate(new Vector3f(-2.0f, 0.0f,0.0f));
+            mvp.identity();
+            projection.mul(view, mvp).mul(model, mvp);
+
+            program.use();
+            program.setMatrix4f("model", model);
+            program.setMatrix4f("view", view);
+            program.setMatrix4f("projection", projection);
+            program.setUniform3f("viewPos", c.getPosition());
+
+            glDrawArrays(GL_TRIANGLES, 0, cube.getVertexCount());
+
+            cube.unbindVAO();
 
             //Check events and swap buffers
+            display.setCamera(c);
             display.update();
         }
     }

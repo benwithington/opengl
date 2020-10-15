@@ -14,7 +14,7 @@ public class Model {
     private final int FLOAT_SIZE = 4;
 
     public Model(float[] positions, int[] indices) {
-        vertexCount = positions.length/5;
+        vertexCount = positions.length/6;
         vao = glGenVertexArrays();
         bindVAO();
 
@@ -26,9 +26,9 @@ public class Model {
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, dataToFloatBuffer(positions), GL_STATIC_DRAW);
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 5 * FLOAT_SIZE, 0 * FLOAT_SIZE);
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, 6 * FLOAT_SIZE, 0 * FLOAT_SIZE);
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, 2, GL_FLOAT, false, 5 * FLOAT_SIZE, 3 * FLOAT_SIZE);
+        glVertexAttribPointer(1, 3, GL_FLOAT, false, 6 * FLOAT_SIZE, 3 * FLOAT_SIZE);
         glEnableVertexAttribArray(1);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);

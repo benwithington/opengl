@@ -82,7 +82,7 @@ public class DisplayManager {
         glfwSetScrollCallback(window, (window, xoffset, yoffset) -> camera.processMouseScroll((float)yoffset));
         glfwSetFramebufferSizeCallback(window, (window, width, height) -> glViewport(0,0,width, height));
 
-        //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         glfwMakeContextCurrent(window);
         glfwSwapInterval(1);
