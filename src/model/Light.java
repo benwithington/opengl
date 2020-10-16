@@ -4,37 +4,17 @@ import org.joml.Vector3f;
 
 public class Light {
 
-    public static final Vector3f WHITE  = new Vector3f(1.0f, 1.0f, 1.0f);
-    public static final Vector3f BLACK  = new Vector3f(0.0f, 0.0f, 0.0f);
-    public static final Vector3f RED    = new Vector3f(1.0f, 0.0f, 0.0f);
-    public static final Vector3f GREEN  = new Vector3f(0.0f, 1.0f, 0.0f);
-    public static final Vector3f BLUE   = new Vector3f(0.0f, 0.0f, 1.0f);
-
-    private Model model;
-
-    private Vector3f colour;
+    //Light properties
     private Vector3f position;
+    private Vector3f ambient;
+    private Vector3f diffuse;
+    private Vector3f specular;
 
-    public Light(Vector3f position, Vector3f colour, Model model) {
-        this.model = model;
-        this.colour = colour;
+    public Light(Vector3f position, Vector3f ambient, Vector3f diffuse, Vector3f specular) {
         this.position = position;
-    }
-
-    public Model getModel() {
-        return model;
-    }
-
-    public void setModel(Model model) {
-        this.model = model;
-    }
-
-    public Vector3f getColour() {
-        return colour;
-    }
-
-    public void setColour(Vector3f colour) {
-        this.colour = colour;
+        this.ambient = ambient;
+        this.diffuse = diffuse;
+        this.specular = specular;
     }
 
     public Vector3f getPosition() {
@@ -42,6 +22,30 @@ public class Light {
     }
 
     public void setPosition(Vector3f position) {
-        this.position = position;
+        this.position = new Vector3f(position);
+    }
+
+    public Vector3f getAmbient() {
+        return ambient;
+    }
+
+    public void setAmbient(Vector3f ambient) {
+        this.ambient = new Vector3f(ambient);
+    }
+
+    public Vector3f getDiffuse() {
+        return diffuse;
+    }
+
+    public void setDiffuse(Vector3f diffuse) {
+        this.diffuse = new Vector3f(diffuse);
+    }
+
+    public Vector3f getSpecular() {
+        return specular;
+    }
+
+    public void setSpecular(Vector3f specular) {
+        this.specular = new Vector3f(specular);
     }
 }

@@ -14,11 +14,8 @@ public class Model {
     private final int vertexCount;
     private final int FLOAT_SIZE = Float.SIZE/8;
 
-    private Vector3f colour;
-
-    public Model(float[] positions, int[] indices, Vector3f colour) {
+    public Model(float[] positions, int[] indices) {
         vertexCount = indices.length;
-        this.colour = colour;
 
         vao = glGenVertexArrays();
         bindVAO();
@@ -40,9 +37,8 @@ public class Model {
         unbindVAO();
     }
 
-    public Model(float[] positions, int floatsPerVertex, Vector3f colour) {
+    public Model(float[] positions, int floatsPerVertex) {
         vertexCount = positions.length/floatsPerVertex;
-        this.colour = colour;
 
         vao = glGenVertexArrays();
         bindVAO();
@@ -58,14 +54,6 @@ public class Model {
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         unbindVAO();
-    }
-
-    public Vector3f getColour() {
-        return colour;
-    }
-
-    public void setColour(Vector3f colour) {
-        this.colour = colour;
     }
 
     public void bindVAO() {
