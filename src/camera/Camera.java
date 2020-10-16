@@ -117,12 +117,16 @@ public class Camera {
         float z = (float) (Math.sin(Math.toRadians(this.yaw)) * Math.cos(Math.toRadians(this.pitch)));
 
         Vector3f front = new Vector3f(x, y, z);
+
         front.normalize(this.front);
 
         this.front.cross(this.worldUp, this.right);
-        this.right.normalize();
+        this.right.normalize(this.right);
+/*
         this.right.cross(this.front, this.up);
-        this.up.normalize();
+        this.up.normalize(this.up);
+        */
+
     }
 
     public Vector3f getPosition() {
