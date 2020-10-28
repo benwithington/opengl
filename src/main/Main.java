@@ -162,6 +162,7 @@ public class Main {
 
         cubeProgram.use();
         cubeProgram.setInt("material.diffuse", 0);
+        cubeProgram.setInt("material.specular", 1);
 
         ShaderProgram lightSourceProgram = new ShaderProgram(
                 "src/shaders/lightSource.vs",
@@ -170,6 +171,7 @@ public class Main {
         //Texture wall = Texture.loadTexture("res/wall.png");
         //Texture awesomeface = Texture.loadTexture("res/awesomeface.png");
         Texture diffuseMap = Texture.loadTexture("res/container2.png");
+        Texture specularMap = Texture.loadTexture("res/container2_specular.png");
 
         float deltaTime = 0.0f;
         float lastFrame = 0.0f;
@@ -237,6 +239,8 @@ public class Main {
 
             Texture.setActiveTexture(0);
             diffuseMap.bind();
+            Texture.setActiveTexture(1);
+            specularMap.bind();
             glDrawArrays(GL_TRIANGLES, 0, cube.getVertexCount());
 
             cube.unbindVAO();
