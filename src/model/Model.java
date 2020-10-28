@@ -47,10 +47,15 @@ public class Model {
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, dataToFloatBuffer(positions), GL_STATIC_DRAW);
 
+        //Vertices
         glVertexAttribPointer(0, 3, GL_FLOAT, false, floatsPerVertex * FLOAT_SIZE, 0 * FLOAT_SIZE);
         glEnableVertexAttribArray(0);
+        //Normals
         glVertexAttribPointer(1, 3, GL_FLOAT, false, floatsPerVertex * FLOAT_SIZE, 3 * FLOAT_SIZE);
         glEnableVertexAttribArray(1);
+        //Tex Coords
+        glVertexAttribPointer(2, 2, GL_FLOAT, false, floatsPerVertex * FLOAT_SIZE, 6 * FLOAT_SIZE);
+        glEnableVertexAttribArray(2);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         unbindVAO();
