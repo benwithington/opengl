@@ -18,7 +18,7 @@ public class Camera {
     //Default Values
     final float YAW         = -90.0f;
     final float PITCH       =   0.0f;
-    final float SPEED       =  10.0f;
+    final float SPEED       =   7.5f;
     final float SENSITIVITY =   0.1f;
     final float ZOOM        =  45.0f;
 
@@ -122,11 +122,6 @@ public class Camera {
 
         this.front.cross(this.worldUp, this.right);
         this.right.normalize(this.right);
-/*
-        this.right.cross(this.front, this.up);
-        this.up.normalize(this.up);
-        */
-
     }
 
     public Vector3f getPosition() {

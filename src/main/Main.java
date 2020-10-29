@@ -157,8 +157,8 @@ public class Main {
         MaterialModel cube = new MaterialModel(vertices, 8, cubeMaterial);
 
         ShaderProgram cubeProgram = new ShaderProgram(
-                "src/shaders/diffuseMaps.vs",
-                "src/shaders/diffuseMaps.fs");
+                "src/shaders/directionalLight.vs",
+                "src/shaders/directionalLight.fs");
 
         cubeProgram.use();
         cubeProgram.setInt("material.diffuse", 0);
@@ -173,7 +173,7 @@ public class Main {
         Texture diffuseMap = Texture.loadTexture("res/container2.png");
         Texture specularMap = Texture.loadTexture("res/container2_specular.png");
 
-        float deltaTime = 0.0f;
+        float deltaTime;
         float lastFrame = 0.0f;
 
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -208,27 +208,23 @@ public class Main {
             lightSourceProgram.setUniform3f("lightColor", light.getSpecular());
             lightSourceProgram.setMatrix4f("mvp", mvp);
 
-            glDrawArrays(GL_TRIANGLES, 0, lightModel.getVertexCount());
+            //glDrawArrays(GL_TRIANGLES, 0, lightModel.getVertexCount());
 
             cube.unbindVAO();
 
             //Objects Affected by Light Source [[CUBE]]
             cube.bindVAO();
 
-            model.identity();
-            model.translate(new Vector3f(-2.0f, 1.0f,0.0f)).rotateY(Math.toRadians(45));
-
             cubeProgram.use();
 
             //Vertex uniforms
-            cubeProgram.setMatrix4f("model", model);
             cubeProgram.setMatrix4f("view", view);
             cubeProgram.setMatrix4f("projection", projection);
             //Fragment uniforms
-            cubeProgram.setUniform3f("light.position", light.getPosition());
             cubeProgram.setUniform3f("viewPos", c.getPosition());
 
             //Light Uniforms
+            cubeProgram.setUniform3f("light.direction", new Vector3f(-0.2f, -1.0f, -0.3f));
             cubeProgram.setUniform3f("light.ambient", light.getAmbient());
             cubeProgram.setUniform3f("light.diffuse", light.getDiffuse());
             cubeProgram.setUniform3f("light.specular", light.getSpecular());
@@ -237,11 +233,19 @@ public class Main {
             cubeProgram.setUniform3f("material.specular", cube.getMaterial().getSpecular());
             cubeProgram.setFloat("material.shininess", cube.getMaterial().getShininess());
 
-            Texture.setActiveTexture(0);
-            diffuseMap.bind();
-            Texture.setActiveTexture(1);
-            specularMap.bind();
-            glDrawArrays(GL_TRIANGLES, 0, cube.getVertexCount());
+            for(int i = 0; i < cubePositions.length; i++) {
+                model.identity();
+                model.translate(cubePositions[i]);
+                float angle = 20.0f * i;
+                model.rotate(angle, new Vector3f(1.0f, 0.3f,0.5f));
+                cubeProgram.setMatrix4f("model", model);
+
+                Texture.setActiveTexture(0);
+                diffuseMap.bind();
+                Texture.setActiveTexture(1);
+                specularMap.bind();
+                glDrawArrays(GL_TRIANGLES, 0, cube.getVertexCount());
+            }
 
             cube.unbindVAO();
 
